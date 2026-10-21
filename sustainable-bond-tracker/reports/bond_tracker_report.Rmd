@@ -1,0 +1,183 @@
+---
+title: "Sustainable Infrastructure Bond Tracker"
+subtitle: "Labelled corporate bonds in African and Indian Ocean financial hubs, October 2021 – October 2026"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    theme: flatly
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      fig.align = "center", out.width = "90%")
+```
+
+```{r load}
+source("R/00_setup.R")
+bonds <- readRDS("data/processed/bonds_clean.rds")
+km    <- readRDS("output/tables/key_metrics.rds")
+pct   <- function(x, d = 0) paste0(formatC(100 * x, format = "f", digits = d), "%")
+usd   <- function(x) paste0("USD ", formatC(x, format = "f", digits = 0, big.mark = ","), "m")
+fig   <- function(f) knitr::include_graphics(normalizePath(file.path("output/figures", f)), rel_path = FALSE)
+```
+
+# Executive summary
+
+- **Register:** `r km$n_bonds` labelled bonds from `r km$n_issuers` issuers across `r km$n_countries` markets, totalling about **`r usd(km$total_usd_m)`** (USD equivalent; see FX note). Every row links to its source.
+- **Banks dominate supply:** banks issued **`r pct(km$share_banks)`** of volume, mostly as multi-sector portfolio bonds that refinance green and social loan books. That makes the *bank lending framework* the real engine of the market.
+- **Johannesburg is the depth market:** South Africa accounts for **`r pct(km$share_za_usd)`** of volume and is the only market with all four labels and transparent floating-rate pricing. Mauritius has `r km$mu_deals` green deals (`r usd(km$mu_usd_m)`), all green and all from 2023 onwards.
+- **Pricing follows the sovereign curve and tenor, not the label:** disclosed fixed coupons range from **`r km$fixed_min`% to `r km$fixed_max`%**, set by local-currency rates. On the JSE, spreads over 3M JIBAR rise about **`r round(km$spread_per_year)` bps per extra year of tenor** (R² = `r round(km$spread_r2, 2)`), with no visible "greenium" by label in this sample.
+- **Gaps are the opportunity:** water infrastructure has only `r km$water_deals` deal (`r pct(km$water_share, 1)` of volume), sustainability-linked structures only `r pct(km$share_slb_n)` of deals, and pricing is disclosed for just `r pct(km$pct_pricing)` of deals.
+
+# Scope and method
+
+| Item | Definition used |
+|---|---|
+| Instruments | Labelled green, social, sustainability (use of proceeds) and sustainability-linked (KPI) bonds and notes |
+| Issuers | Banks, corporates, real-estate funds, DFIs, state-owned enterprises and utilities. Sovereigns, sub-sovereign governments and supranationals (e.g. AfDB) excluded |
+| Hubs | JSE (Johannesburg), SEM (Mauritius), NSE (Nairobi), DSE (Dar es Salaam), RSE (Kigali), NSX (Windhoek), LuSE (Lusaka), BRVM (Abidjan), Casablanca, Cairo, Lagos (FMDQ/LSE) |
+| Window | 1 October 2021 to 31 October 2026, by issue, listing or announcement date (basis recorded per bond) |
+| Sources | Exchange notices (JSE SENS, SEM), issuer and DFI press releases, specialist financial press. URL stored per bond |
+| USD conversion | Source-quoted USD figure where available; otherwise a single indicative rate per currency (`data/reference/fx_indicative.csv`), for scale only |
+
+The register is a **curated sample, not a full census**. It is complete enough to show structure, pricing behaviour and sector mix, but it is not a market-share statistic.
+
+# Market size and momentum
+
+```{r}
+fig("fig1_volume_by_year.png")
+```
+
+```{r}
+read_csv("output/tables/volume_by_year.csv", show_col_types = FALSE) %>%
+  mutate(usd_m = round(usd_m)) %>%
+  knitr::kable(col.names = c("Year", "Deals", "USD m"),
+               caption = "Labelled issuance by year (2021 = Oct–Dec; 2026 = Jan–Oct)")
+```
+
+Issuance grew year on year through 2025. The 2024 peak in sustainability bonds reflects AAIB's USD 500m DFI-anchored deal in Egypt. Green remains the default label; social and sustainability bonds come almost entirely from banks refinancing affordable-housing and MSME books.
+
+# Hubs and issuers
+
+```{r}
+fig("fig6_market_label_matrix.png")
+```
+
+```{r}
+read_csv("output/tables/hubs_by_country.csv", show_col_types = FALSE) %>%
+  mutate(usd_m = round(usd_m)) %>%
+  knitr::kable(col.names = c("Region", "Market", "Deals", "Issuers", "USD m", "Labels"),
+               caption = "Issuance by market")
+```
+
+```{r}
+read_csv("output/tables/issuer_type.csv", show_col_types = FALSE) %>%
+  mutate(usd_m = round(usd_m), share = pct(share)) %>%
+  knitr::kable(col.names = c("Issuer type", "Deals", "USD m", "Share"),
+               caption = "Issuance by issuer type")
+```
+
+# Where the capital goes
+
+```{r}
+fig("fig2_use_of_proceeds.png")
+```
+
+- **Multi-sector bank bonds** (green, social, sustainability) are the largest category. The capital is real, but sector attribution only appears later in allocation reports. For a lender, the useful signal is that **investors are buying bank portfolios**, so a well-built eligible loan book can be monetised.
+- **Clean energy** is the largest single-sector use: solar in Zambia, Côte d'Ivoire and Mauritius, and renewables financed through South African bank Tier 2 bonds.
+- **Clean transport** is concentrated in one issuer (ONCF, Morocco, two Climate Bonds-certified rail deals).
+- **Water infrastructure** has one deal (Tanga UWASA, Tanzania: 10 years at 13.5%). This is the clearest gap in the register.
+
+# Coupon rates and pricing
+
+## Fixed-rate deals
+
+```{r}
+fig("fig3_fixed_coupons.png")
+```
+
+```{r}
+read_csv("output/tables/fixed_coupons.csv", show_col_types = FALSE) %>%
+  transmute(Issuer = issuer, Market = country, Ccy = currency, Label = label,
+            `Coupon %` = coupon_pct, `Step-up %` = step_up_coupon_pct,
+            `Tenor (y)` = tenor_years, `Use of proceeds` = use_of_proceeds) %>%
+  knitr::kable(caption = "Disclosed fixed coupons")
+```
+
+Coupons rank by currency, not by label: TZS and KES deals price at 10–13.5%, XOF deals at 6–8.75%, and the USD Access Bank deal at 5.5% (stepping up to 7.25%). A bank lending in these markets should therefore benchmark sustainable loan pricing against the **local sovereign curve plus credit spread**, and treat any label discount as a small adjustment on top.
+
+## Floating-rate notes (JSE)
+
+```{r}
+fig("fig4_jibar_spread_tenor.png")
+```
+
+```{r}
+read_csv("output/tables/jibar_spread_by_tenor.csv", show_col_types = FALSE) %>%
+  knitr::kable(col.names = c("Tenor bucket", "Senior notes", "Median bps", "Min", "Max"),
+               caption = "Senior JSE labelled FRNs: spread over 3M JIBAR")
+```
+
+```{r}
+m <- readRDS("output/tables/spread_model.rds")
+broom_tbl <- as.data.frame(coef(summary(m)))
+broom_tbl$term <- c("Intercept", "Tenor (per year)", "Tier 2 dummy")
+rownames(broom_tbl) <- NULL
+broom_tbl %>%
+  transmute(Term = term, `Estimate (bps)` = round(Estimate, 1),
+            `Std error` = round(`Std. Error`, 1),
+            `p-value` = signif(`Pr(>|t|)`, 2)) %>%
+  knitr::kable(caption = sprintf("OLS: spread_bps ~ tenor + Tier 2 (n = %d, R-squared = %.2f)",
+                                 nobs(m), summary(m)$r.squared))
+```
+
+Tenor explains most of the variation in spread. The Tier 2 coefficient is not significant because only two Tier 2 notes in the sample have disclosed spreads, so no conclusion should be drawn from it. Within the same tenor, the REIT issuer (Growthpoint) prices wider than the bank senior notes, as expected.
+
+# Tenor and maturity profile
+
+```{r}
+fig("fig5_maturity_ladder.png")
+```
+
+```{r}
+read_csv("output/tables/tenor_by_label.csv", show_col_types = FALSE) %>%
+  knitr::kable(col.names = c("Label", "Deals with tenor", "Median tenor (y)", "Max tenor (y)"),
+               caption = "Tenor by label")
+```
+
+The median disclosed tenor is `r km$median_tenor` years. Long tenors (10–15 years) appear only where there is a hard asset with contracted cash flows (water utility, solar IPP, mortgage refinancing) or in Tier 2 bank capital. Disclosed maturities cluster in **2027–2031**, mainly bank green, social and sustainability notes. That pipeline is a natural point to refinance or take out the underlying assets.
+
+# Data quality and limitations
+
+```{r}
+read_csv("output/tables/disclosure_quality.csv", show_col_types = FALSE) %>%
+  mutate(across(starts_with("pct"), pct)) %>%
+  knitr::kable(col.names = c("Deals", "Pricing disclosed", "Tenor disclosed", "USD via indicative FX"),
+               caption = "Disclosure coverage")
+```
+
+1. **Sample, not census.** Private placements and unlisted notes are under-represented, and some JSE programme taps are omitted.
+2. **Pricing disclosure is thin outside the JSE.** Many press releases omit the coupon. Fields are left blank rather than estimated.
+3. **FX is indicative.** USD values for non-USD deals without a source-quoted figure use one round-number rate per currency. Treat them as order of magnitude only.
+4. **Dates** are issue, listing, offer-close or announcement dates, depending on the source (`date_basis` column).
+5. **No greenium test.** A proper label-premium test needs matched vanilla comparators from the same issuer and date. This is a recommended next step.
+
+# Appendix: full register
+
+```{r}
+bonds %>%
+  transmute(ID = bond_id, Issuer = issuer, Market = country, Label = label,
+            Date = issue_date, Ccy = currency,
+            `Amount (m, local)` = formatC(amount_local_m, format = "f", digits = 0, big.mark = ","),
+            Pricing = case_when(!is.na(coupon_pct) ~ paste0(coupon_pct, "%"),
+                                !is.na(spread_bps) ~ paste0(reference_rate, " + ", spread_bps, "bps"),
+                                TRUE ~ "n/d"),
+            `Tenor (y)` = tenor_years, `Use of proceeds` = use_of_proceeds,
+            Source = paste0("[link](", source_url, ")")) %>%
+  knitr::kable()
+```

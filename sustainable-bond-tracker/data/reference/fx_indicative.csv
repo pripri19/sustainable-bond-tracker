@@ -1,0 +1,10 @@
+currency,units_per_usd,note
+USD,1,
+ZAR,18.3,Indicative round-number rate for scale only; not an as-of-issue-date rate
+NAD,18.3,Pegged 1:1 to ZAR
+MUR,45.5,Indicative round-number rate for scale only
+KES,129,Indicative round-number rate for scale only
+TZS,2600,Indicative round-number rate for scale only
+RWF,1300,Indicative round-number rate for scale only
+MAD,10.0,Indicative round-number rate for scale only
+XOF,600,Indicative round-number rate for scale only (CFA franc pegged to EUR at 655.957)

@@ -1,0 +1,109 @@
+---
+title: "Strategic Proposal: Next-Generation Sustainable Lending Framework"
+subtitle: "Evidence from the Sustainable Infrastructure Bond Tracker (October 2021 – October 2026)"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  word_document:
+    toc: false
+    reference_docx: reference.docx
+  html_document:
+    theme: flatly
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r load, include=FALSE}
+source("R/00_setup.R")
+km  <- readRDS("output/tables/key_metrics.rds")
+pct <- function(x, d = 0) paste0(formatC(100 * x, format = "f", digits = d), "%")
+usd <- function(x) paste0("USD ", formatC(x, format = "f", digits = 0, big.mark = ","), "m")
+```
+
+**Audience:** Executive Committee / Credit & Sustainability Committee  **Classification:** Internal  **Decision requested:** Approve the framework design (Section 3) and the 0–6 month quick wins (Section 4).
+
+# 1. Executive summary
+
+- **The market funds bank portfolios, not just projects.** Of `r km$n_bonds` labelled corporate bonds tracked across `r km$n_countries` African and Indian Ocean markets (about `r usd(km$total_usd_m)`), banks issued `r pct(km$share_banks)` of the volume, mostly to refinance eligible green and social loan books. A well-governed lending framework is therefore the precondition for the Bank's own access to labelled funding.
+- **Pricing is set by currency and tenor, not the label.** Fixed coupons ranged from `r km$fixed_min`% to `r km$fixed_max`%, depending on the local sovereign curve. On the JSE, spreads widen by about `r round(km$spread_per_year)` bps per year of tenor. The framework should not promise borrowers a "green discount" that the funding market does not provide.
+- **The gaps are commercially open.** Water infrastructure (`r km$water_deals` deal), climate adaptation and sustainability-linked structures (`r pct(km$share_slb_n)` of deals) are under-served. Mauritius has a functioning listed green market (`r km$mu_deals` deals since October 2023) but no social or sustainability-linked issuance yet.
+- **Recommendation:** adopt a three-pillar Sustainable Lending Framework: (i) an eligibility taxonomy aligned to ICMA/LMA principles, (ii) a product menu combining use-of-proceeds and KPI-linked loans, and (iii) committee-level governance with segregation of duties and annual allocation and impact reporting. Size the book for an inaugural labelled bond on the SEM.
+
+# 2. What the evidence shows
+
+| Finding | Implication for the Bank |
+|---|---|
+| Banks issued `r pct(km$share_banks)` of labelled volume; multi-sector bank bonds are the largest use-of-proceeds category | Build the eligible loan book first; the bond follows. Loan-level tagging is the critical capability |
+| JSE is the deepest hub (`r pct(km$share_za_usd)` of volume, all four labels, transparent FRN pricing) | Use JSE spreads as the regional reference curve for rand and dual-currency structures |
+| Fixed coupons of `r km$fixed_min`–`r km$fixed_max`% follow local rates (TZS/KES 10–13.5%; XOF 6–8.75%; USD 5.5%) | Price off the sovereign curve plus credit spread; treat label economics as a small adjustment |
+| Long tenors (10–15 years) only appear with contracted cash flows (water utility, solar IPP, mortgage refinancing) | Offer 10–15 year infrastructure tenors only with offtake, tariff or DFI guarantee support |
+| DFIs anchor landmark deals (IFC, EBRD, BII in Egypt, Morocco and South Africa) | Co-lending and partial guarantees are the fastest route to tenor and volume |
+| Pricing disclosed for only `r pct(km$pct_pricing)` of deals | Transparent reporting is a differentiator with investors and regulators |
+
+# 3. Proposed framework design
+
+## 3.1 Eligibility taxonomy (use of proceeds)
+
+| Category | Eligible activities (illustrative) | Example KPI / impact metric | Priority |
+|---|---|---|---|
+| Clean energy | Solar, wind and storage; embedded C&I generation; grid connection | MW installed; tCO2e avoided | Core |
+| Green buildings | New-build or retrofit with recognised certification (e.g. EDGE, LEED, Green Star) | kWh/m² saving; certification level | Core |
+| Water & sanitation | Treatment, distribution, non-revenue water reduction, desalination, rainwater harvesting | m³/day capacity; NRW % | **Growth (gap)** |
+| Climate adaptation | Coastal and flood defence, drought-resilient agriculture, cyclone-resilient structures | Assets protected; resilience rating | **Growth (gap)** |
+| Clean transport | Electric fleet, mass transit, charging infrastructure | Vehicles; tCO2e avoided | Opportunistic |
+| Affordable housing | Mortgages and developer finance under defined income thresholds | Households financed; % women borrowers | Core (social) |
+| MSME & inclusion | Women- and youth-led SMEs; underserved segments | Loans and value disbursed; jobs supported | Core (social) |
+
+Exclusions follow the Bank's existing exclusion list, plus fossil-fuel generation, so the framework cannot be used for transition-washing.
+
+## 3.2 Product menu
+
+1. **Green / social loans** (use of proceeds, aligned to the LMA Green Loan and Social Loan Principles): ring-fenced, tagged at origination, and eligible for the future bond pool.
+2. **Sustainability-linked loans** (aligned to the LMA Sustainability-Linked Loan Principles): general-purpose corporate facilities with a two-way margin ratchet tied to 1–3 material, externally verified KPIs. The ratchet size is to be calibrated by Credit and Treasury against the funding curve.
+3. **Infrastructure term facilities** (10–15 years): only with contracted revenue and a DFI partial guarantee or co-lending, following the Tanga UWASA, CEC and Poro Power precedents.
+4. **Labelled funding:** once the tagged book reaches a size comparable with regional deals (median deal in the register is `r usd(km$median_deal_usd_m)`), issue an inaugural green or sustainability bond on the SEM, using the existing FSC green bond guidelines.
+
+## 3.3 Pricing principles
+
+- Base rate = sovereign curve for the loan currency + client credit spread + tenor premium. JSE evidence suggests about `r round(km$spread_per_year)` bps per year as a reference slope.
+- A label-linked concession is permitted only where it is matched by a funding benefit (DFI line, labelled bond, guarantee) and documented in the credit paper.
+- SLL ratchets must be symmetrical (penalty and reward) to remain defensible.
+
+## 3.4 Governance and controls
+
+| Control | Design |
+|---|---|
+| Oversight | Sustainable Finance Committee (CRO, CFO, Head of Corporate, Head of Sustainability) reporting to the Board Risk Committee |
+| Segregation of duties | Relationship managers originate; an independent Sustainability/Risk unit confirms eligibility; Finance controls the allocation register |
+| External assurance | Second-party opinion on the framework; annual limited assurance on allocation and impact |
+| Regulatory alignment | Bank of Mauritius Guideline on Climate-related and Environmental Financial Risk Management (April 2022); FSC Guidelines for Issue of Corporate and Green Bonds; ICMA GBP/SBP/SBG/SLBP |
+| Reporting | Annual allocation and impact report; register published with the bond |
+| Audit trail | Loan-level tag, evidence pack and approval stored in the core banking and credit systems |
+
+# 4. Implementation roadmap
+
+| Horizon | Quick wins (0–6 months) | Strategic wins (6–24 months) |
+|---|---|---|
+| Policy | Approve taxonomy and exclusion list; board-approved framework | Commission SPO; publish framework |
+| Data | Add a sustainability tag and KPI fields to loan origination | Automated allocation register and impact dashboard |
+| Products | Launch green/social loan variants of existing products | SLL product for top corporate clients; water and adaptation infrastructure desk |
+| Partnerships | Open discussions with DFIs on risk-sharing lines | Co-lending or guarantee programme for 10–15 year infrastructure tenors |
+| Funding | Baseline the eligible legacy book | Inaugural labelled bond on the SEM |
+
+# 5. Risks, assumptions and open items
+
+- **Greenwashing and mis-labelling risk:** mitigated by independent eligibility sign-off, SPO and annual assurance.
+- **KPI materiality (SLLs):** weak KPIs undermine credibility. KPIs need committee approval and third-party verification.
+- **FX and tenor mismatch:** long-tenor local-currency lending needs matching funding or DFI support.
+- **Concentration:** a pipeline weighted to solar and real estate should be monitored against sector limits.
+- **Assumptions:** the tracker is a curated sample (`r km$n_bonds` deals). USD values for some deals use indicative FX, and `r pct(1 - km$pct_pricing)` of deals have no disclosed pricing. Findings are directional, not a market-share statistic.
+- **Open items:** confirm the current eligible-book baseline; agree the ratchet calibration with Treasury; confirm with Legal and Compliance any updates to BoM/FSC requirements since the documents cited.
+
+# 6. Next optimisation step
+
+Run a **matched greenium test**: pair each JSE labelled note with a same-issuer vanilla note priced in the same week to quantify any label premium. Then refresh the tracker quarterly so the pricing assumptions in Section 3.3 stay current.
+
+**Sources:** Sustainable Infrastructure Bond Tracker register (`data/raw/bonds_raw.csv`, per-bond URLs); Bank of Mauritius, *Guideline on Climate-related and Environmental Financial Risk Management* (01.04.2022), bom.mu; FSC Mauritius, *Guidelines for Issue of Corporate and Green Bonds in Mauritius*, fscmauritius.org; SEM, first green bond listing (Cim Finance, 25 October 2023), stockexchangeofmauritius.com.

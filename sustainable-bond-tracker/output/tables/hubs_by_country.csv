@@ -1,0 +1,13 @@
+region,country,deals,issuers,usd_m,labels
+Southern Africa,South Africa,25,9,1565.0622950819672,"Green, Social, Sustainability, Sustainability-linked"
+North Africa,Egypt,1,1,500,Sustainability
+North Africa,Morocco,2,1,300,Green
+East Africa,Kenya,1,1,155.03875968992247,Green
+Southern Africa,Zambia,2,1,151,Green
+Indian Ocean,Mauritius,4,4,132.37912087912088,Green
+East Africa,Tanzania,3,3,115.26461538461538,"Green, Social"
+West Africa,WAEMU (regional),1,1,100,Social
+West Africa,Cote d'Ivoire,1,1,71.08333333333333,Green
+West Africa,Nigeria,1,1,50,Green
+East Africa,Rwanda,1,1,24.8,Sustainability-linked
+Southern Africa,Namibia,1,1,9.836065573770492,Sustainability

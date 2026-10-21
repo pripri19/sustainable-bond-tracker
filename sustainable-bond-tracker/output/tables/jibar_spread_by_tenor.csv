@@ -1,0 +1,5 @@
+tenor_bucket,notes,median_spread_bps,min_bps,max_bps
+<=3y,5,94,80,105
+3-5y,3,114,95,120
+5-7y,4,125,102,150
+7-10y,1,190,190,190

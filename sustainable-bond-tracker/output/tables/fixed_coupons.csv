@@ -1,0 +1,8 @@
+bond_id,issuer,country,currency,label,coupon_type,coupon_pct,step_up_coupon_pct,tenor_years,use_of_proceeds,issue_date
+TZ-003,Tanga Urban Water Supply and Sanitation Authority,Tanzania,TZS,Green,Fixed,13.5,NA,10,Water infrastructure,2024-05-15
+KE-001,Safaricom,Kenya,KES,Green,Fixed,10.4,NA,5,Multi-sector green,2025-12-11
+TZ-002,CRDB Bank,Tanzania,TZS,Green,Fixed,10.25,NA,5,Multi-sector green,2023-10-06
+CI-001,Poro Power 1,Cote d'Ivoire,XOF,Green,Fixed,8.75,NA,15,Clean energy,2026-04-20
+TZ-001,NMB Bank,Tanzania,TZS,Social,Fixed,8.5,NA,3,MSME / financial inclusion,2022-03-21
+WA-001,CRRH-UEMOA,WAEMU (regional),XOF,Social,Fixed,6,NA,15,Affordable housing,2025-07-30
+NG-001,Access Bank,Nigeria,USD,Green,Step-up,5.5,7.25,5,Multi-sector green,2022-05-10
